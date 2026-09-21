@@ -98,10 +98,60 @@ class _MyAppState extends State<MyApp> {
                       ),
                     ],
                   ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (displayedName.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Please submit your name first!"),
+                          ),
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SecondPage(name: displayedName),
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text("Next Page"),
+                  ),
                 ],
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class SecondPage extends StatelessWidget {
+  final String name;
+
+  const SecondPage({super.key, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Second Page")),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Welcome $name!", style: const TextStyle(fontSize: 24)),
+
+            const SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Complete"),
+            ),
+          ],
         ),
       ),
     );
