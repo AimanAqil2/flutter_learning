@@ -17,6 +17,7 @@ class _MyAppState extends State<MyApp> {
   int counter = 0;
   String displayedName = "";
   String errorMessage = "";
+  String status = "";
 
   final TextEditingController nameController = TextEditingController();
 
@@ -42,6 +43,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                   TextField(controller: nameController),
                   Text("Hello $displayedName"),
+                  Text("Status: $status"),
                   Text(errorMessage),
                   ElevatedButton(
                     onPressed: () {
@@ -99,7 +101,7 @@ class _MyAppState extends State<MyApp> {
                     ],
                   ),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (displayedName.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -107,13 +109,17 @@ class _MyAppState extends State<MyApp> {
                           ),
                         );
                       } else {
-                        Navigator.push(
+                        final result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
                                 SecondPage(name: displayedName),
                           ),
                         );
+
+                        setState(() {
+                          status = result ?? "";
+                        });
                       }
                     },
                     child: const Text("Next Page"),
@@ -130,6 +136,7 @@ class _MyAppState extends State<MyApp> {
 
 class SecondPage extends StatelessWidget {
   final String name;
+  final List<String> students = const ["Aqil", "Abu", "Ahmad", "Ali", "Aiman"];
 
   const SecondPage({super.key, required this.name});
 
@@ -145,9 +152,21 @@ class SecondPage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
+            SizedBox(
+              height: 150,
+              child: ListView.builder(
+                itemCount: students.length,
+                itemBuilder: (context, index) {
+                  return Text(students[index]);
+                },
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context, "Completed");
               },
               child: const Text("Complete"),
             ),
