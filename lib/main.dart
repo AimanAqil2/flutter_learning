@@ -14,7 +14,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int counter = 0;
   String displayedName = "";
   String errorMessage = "";
   String status = "";
@@ -41,10 +40,13 @@ class _MyAppState extends State<MyApp> {
                     "Learning Flutter",
                     style: TextStyle(fontSize: 18),
                   ),
+
                   TextField(controller: nameController),
+
                   Text("Hello $displayedName"),
                   Text("Status: $status"),
                   Text(errorMessage),
+
                   ElevatedButton(
                     onPressed: () {
                       if (nameController.text.trim().isEmpty) {
@@ -62,44 +64,14 @@ class _MyAppState extends State<MyApp> {
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text("Name submitted succesfully!"),
+                            content: Text("Name submitted successfully!"),
                           ),
                         );
                       }
                     },
                     child: const Text("Submit"),
                   ),
-                  Text(
-                    "$counter",
-                    style: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            counter++;
-                          });
-                        },
-                        child: const Text("Add 1"),
-                      ),
 
-                      const SizedBox(width: 20),
-
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            counter--;
-                          });
-                        },
-                        child: const Text("Minus 1"),
-                      ),
-                    ],
-                  ),
                   ElevatedButton(
                     onPressed: () async {
                       if (displayedName.isEmpty) {
@@ -136,7 +108,14 @@ class _MyAppState extends State<MyApp> {
 
 class SecondPage extends StatelessWidget {
   final String name;
-  final List<String> students = const ["Aqil", "Abu", "Ahmad", "Ali", "Aiman"];
+
+  final List<Map<String, dynamic>> students = const [
+    {"name": "Aqil", "age": 20, "course": "Computer Science"},
+    {"name": "Abu", "age": 21, "course": "Information Technology"},
+    {"name": "Ahmad", "age": 20, "course": "Computer Science"},
+    {"name": "Ali", "age": 22, "course": "Software Engineering"},
+    {"name": "Aiman", "age": 21, "course": "Information Technology"},
+  ];
 
   const SecondPage({super.key, required this.name});
 
@@ -157,7 +136,22 @@ class SecondPage extends StatelessWidget {
               child: ListView.builder(
                 itemCount: students.length,
                 itemBuilder: (context, index) {
-                  return Text(students[index]);
+                  return ListTile(
+                    leading: const Icon(Icons.person),
+                    title: Text(students[index]["name"]),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StudentDetailPage(
+                            studentName: students[index]["name"],
+                            studentAge: students[index]["age"],
+                            studentCourse: students[index]["course"],
+                          ),
+                        ),
+                      );
+                    },
+                  );
                 },
               ),
             ),
@@ -169,6 +163,39 @@ class SecondPage extends StatelessWidget {
                 Navigator.pop(context, "Completed");
               },
               child: const Text("Complete"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class StudentDetailPage extends StatelessWidget {
+  final String studentName;
+  final int studentAge;
+  final String studentCourse;
+
+  const StudentDetailPage({
+    super.key,
+    required this.studentName,
+    required this.studentAge,
+    required this.studentCourse,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Student Detail")),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Name: $studentName", style: const TextStyle(fontSize: 24)),
+            Text("Age: $studentAge", style: const TextStyle(fontSize: 20)),
+            Text(
+              "Course: $studentCourse",
+              style: const TextStyle(fontSize: 20),
             ),
           ],
         ),
