@@ -4,6 +4,15 @@ void main() {
   runApp(const MyApp());
 }
 
+// Student model
+class Student {
+  final String name;
+  final int age;
+  final String course;
+
+  const Student({required this.name, required this.age, required this.course});
+}
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -36,6 +45,7 @@ class _MyAppState extends State<MyApp> {
                     "My First Flutter App!",
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
+
                   const Text(
                     "Learning Flutter",
                     style: TextStyle(fontSize: 18),
@@ -109,12 +119,12 @@ class _MyAppState extends State<MyApp> {
 class SecondPage extends StatelessWidget {
   final String name;
 
-  final List<Map<String, dynamic>> students = const [
-    {"name": "Aqil", "age": 20, "course": "Computer Science"},
-    {"name": "Abu", "age": 21, "course": "Information Technology"},
-    {"name": "Ahmad", "age": 20, "course": "Computer Science"},
-    {"name": "Ali", "age": 22, "course": "Software Engineering"},
-    {"name": "Aiman", "age": 21, "course": "Information Technology"},
+  final List<Student> students = const [
+    Student(name: "Aqil", age: 20, course: "Computer Science"),
+    Student(name: "Abu", age: 21, course: "Information Technology"),
+    Student(name: "Ahmad", age: 20, course: "Computer Science"),
+    Student(name: "Ali", age: 22, course: "Software Engineering"),
+    Student(name: "Aiman", age: 21, course: "Information Technology"),
   ];
 
   const SecondPage({super.key, required this.name});
@@ -138,16 +148,14 @@ class SecondPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return ListTile(
                     leading: const Icon(Icons.person),
-                    title: Text(students[index]["name"]),
+                    title: Text(students[index].name),
+
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StudentDetailPage(
-                            studentName: students[index]["name"],
-                            studentAge: students[index]["age"],
-                            studentCourse: students[index]["course"],
-                          ),
+                          builder: (context) =>
+                              StudentDetailPage(student: students[index]),
                         ),
                       );
                     },
@@ -172,16 +180,9 @@ class SecondPage extends StatelessWidget {
 }
 
 class StudentDetailPage extends StatelessWidget {
-  final String studentName;
-  final int studentAge;
-  final String studentCourse;
+  final Student student;
 
-  const StudentDetailPage({
-    super.key,
-    required this.studentName,
-    required this.studentAge,
-    required this.studentCourse,
-  });
+  const StudentDetailPage({super.key, required this.student});
 
   @override
   Widget build(BuildContext context) {
@@ -191,10 +192,12 @@ class StudentDetailPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Name: $studentName", style: const TextStyle(fontSize: 24)),
-            Text("Age: $studentAge", style: const TextStyle(fontSize: 20)),
+            Text("Name: ${student.name}", style: const TextStyle(fontSize: 24)),
+
+            Text("Age: ${student.age}", style: const TextStyle(fontSize: 20)),
+
             Text(
-              "Course: $studentCourse",
+              "Course: ${student.course}",
               style: const TextStyle(fontSize: 20),
             ),
           ],
