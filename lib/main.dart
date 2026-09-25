@@ -13,6 +13,26 @@ class Student {
   const Student({required this.name, required this.age, required this.course});
 }
 
+class StudentTile extends StatelessWidget {
+  final Student student;
+  final VoidCallback onTap;
+
+  const StudentTile({super.key, required this.student, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.person),
+        title: Text(student.name),
+        subtitle: Text(student.course),
+        trailing: const Icon(Icons.arrow_forward_ios),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -146,10 +166,8 @@ class SecondPage extends StatelessWidget {
               child: ListView.builder(
                 itemCount: students.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: const Icon(Icons.person),
-                    title: Text(students[index].name),
-
+                  return StudentTile(
+                    student: students[index],
                     onTap: () {
                       Navigator.push(
                         context,
